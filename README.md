@@ -2,6 +2,8 @@ mongo-builder
 =============
 
 ```javascript
+// The API is smart enough to check the pssed in done function to determine if a result is 
+// required or just the error state.
 funciton done(err) {
    console.log(err);
 }
@@ -41,6 +43,6 @@ db('user').get(id).pop({comments: 1}).exec(doneWithRes)
 db('user').get(id).pop('comments').exec(doneWithRes)
 
 // Add a comment and update the last mod time
-db('user').set({last_mod: new Date()}).for(id).push('comments', new_comment)
+db('user').set({last_mod: new Date()}).for(id).push('comments', new_comment).exec(done)
 
 ```
