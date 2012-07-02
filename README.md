@@ -14,9 +14,9 @@ function doneWithRes(err, res) {
 
 
 // Add new user with id
-db('user').set(data).for(id).exec(done)
+db('user').create(id).set(data).exec(done)
 // Add new user with id and return the user to me
-db('user').set(data).for(id).exec(doneWithRes)
+db('user').create(id).set(data).exec(doneWithRes)
 
 // Get the user with id
 db('user').get(id).exec(doneWithRes);
@@ -24,9 +24,9 @@ db('user').get(id).exec(doneWithRes);
 db('user').get(id).fields({name: 1, email: 1}).exec(doneWithRes);
 
 // Update the user with id
-db('user').set(data).for(id).exec(done)
+db('user').get(id).set(data).exec(done)
 // Add new user with id and return the user to me
-db('user').set(data).for(id).exec(doneWithRes)
+db('user').get(id).set(data).exec(doneWithRes)
 
 // Search the users for a given email
 db('user').where({email: 'bobo@clown.school'}).exec(doneWithRes)
@@ -36,13 +36,29 @@ db('user').where({email: 'bobo@clown.school'}).sort({created: 1}).limit(10).offs
 db('user').where({email: 'bobo@clown.school'}).sort(['created', 1]).exec(doneWithRes)
 
 // Add a comment to the user
-db('user').set().for(id).push('comments', new_comment).exec(done)
+db('user').get(id).push('comments', new_comment).exec(done)
 
 // Grab the first comment the user made
 db('user').get(id).pop({comments: 1}).exec(doneWithRes)
 db('user').get(id).pop('comments').exec(doneWithRes)
 
 // Add a comment and update the last mod time
-db('user').set({last_mod: new Date()}).for(id).push('comments', new_comment).exec(done)
+db('user').get()id).set({last_mod: new Date()}).push('comments', new_comment).exec(done)
 
+// Incrementing a counter
+db('user').get(id).inc('auth.failedLogins').exec()
+db('user').get(id).inc('auth.failedLogins', 1).exec()
+// Clear the counter
+db('user').get(id).inc('auth.failedLogins', 1).exec()
+
+// User removes their email
+db('user').get(id).unset('email').exec(done)
+// or
+db('user').get(id).unset({email: 1}).exec(done)
+
+// Remove user
+db('user').remove(id).exec(done)
+
+// Remove set of users
+db('user').where({email: 'bobo@clown.school'}).remove().exec(done)
 ```
